@@ -24,15 +24,9 @@ namespace api.Controllers
             _logger = logger;
         }
 
-
-
-
-
-
         /// <summary>
-        /// Deletes a specific TodoItem.
+        /// example
         /// </summary>
-        /// <param name="id"></param>   
         [HttpGet]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
