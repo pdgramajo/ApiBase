@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>api</name>
+    </assembly>
+    <members>
+        <member name="M:api.Controllers.WeatherForecastController.Get">
+            <summary>
+            Deletes a specific TodoItem.
+            </summary>
+            <param name="id"></param>   
+        </member>
+    </members>
+</doc>
