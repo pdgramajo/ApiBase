@@ -2,6 +2,12 @@
 descargar el sdk e instalar
 * https://dotnet.microsoft.com/download/dotnet-core/3.0
 
+* dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 3.0.0
+* dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 3.0.0
+* dotnet add package Microsoft.EntityFrameworkCore.Design --version 3.0.0
+
+
+
 # Swagger Configuration
 
 ### Get started with Swashbuckle and ASP.NET Core

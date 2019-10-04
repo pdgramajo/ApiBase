@@ -13,6 +13,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.IO;
+using api.DataContext;
+using api.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 namespace api
 {
@@ -28,6 +35,26 @@ namespace api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                           .AddEntityFrameworkStores<ApplicationDBContext>()
+                           .AddDefaultTokenProviders();
+
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                         .AddJwtBearer(options =>
+                         options.TokenValidationParameters = new TokenValidationParameters
+                         {
+                             ValidateIssuer = true,
+                             ValidateAudience = true,
+                             ValidateLifetime = true,
+                             ValidIssuer = "yourdomain.com",//esto va en un archivo de configuracion
+                             ValidAudience = "yourdomain.com",
+                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Super_Secret_Key"])),
+                             ClockSkew = TimeSpan.Zero
+                         });
+
             services.AddControllers();
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -64,7 +91,7 @@ namespace api
                         new List<string>()
                     }
                 });
-                 // Set the comments path for the Swagger JSON and UI.
+                // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
@@ -78,6 +105,8 @@ namespace api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseAuthentication();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
