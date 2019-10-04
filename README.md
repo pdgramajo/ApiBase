@@ -1,12 +1,12 @@
 # WebApi .NetCore 3.0
 descargar el sdk e instalar
-https://dotnet.microsoft.com/download/dotnet-core/3.0
+* https://dotnet.microsoft.com/download/dotnet-core/3.0
 
 # Swagger Configuration
 
 ### Get started with Swashbuckle and ASP.NET Core
-https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-3.0&tabs=netcore-cli
-https://docs.microsoft.com/es-es/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-3.0&tabs=netcore-cli
+* https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-3.0&tabs=netcore-cli
+* https://docs.microsoft.com/es-es/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-3.0&tabs=netcore-cli
 ### el siguiente comando instala el paquete completo de swagger 
 `dotnet add TodoApi.csproj package Swashbuckle.AspNetCore -v 5.0.0-rc4`
 
