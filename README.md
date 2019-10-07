@@ -35,7 +35,7 @@ el valor de Super_Secret_Key
         "Super_Secret_Key": "MY_SUPER_SECRET_KEY"
       }
     },
-    "webapinetcorebase": {
+    "api": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "index.html",

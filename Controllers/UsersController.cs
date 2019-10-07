@@ -107,5 +107,52 @@ namespace api.Controllers
             }
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult> editUser(string id, [FromBody]UserEditData user)
+        {
+            if (ModelState.IsValid)
+            {
+                var userExist = await _userManager.Users.AnyAsync(x => x.Id == id);
+                if (!userExist)
+                {
+                    return NotFound();
+                }
+
+                var userToEdit = await _userManager.FindByIdAsync(id);
+
+                var roles = await _userManager.GetRolesAsync(userToEdit);
+                await _userManager.RemoveFromRolesAsync(userToEdit, roles.ToArray());
+                foreach (string rol in user.roles)
+                {
+                    await _userManager.AddToRoleAsync(userToEdit, rol);
+                }
+
+                userToEdit.PhoneNumber = user.PhoneNumber;
+
+                var result = await _userManager.UpdateAsync(userToEdit);
+
+                if (result.Succeeded)
+                {
+                    return Ok(new
+                    {
+                        roles = roles,
+                        result = result
+                    });
+                }
+                else
+                {
+                    return BadRequest(new
+                    {
+                        roles = roles,
+                        result = result
+                    });
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+
+        }
     }
 }

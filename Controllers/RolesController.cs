@@ -63,7 +63,7 @@ namespace webapinetcorebase.Controllers
             }
             else
             {
-                return BadRequest("error al crear el rol");
+                return BadRequest("error al crear el rol: " + result );
             }
         }
 
