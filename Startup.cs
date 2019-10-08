@@ -63,7 +63,7 @@ namespace api
                 {
                     Version = "v1",
                     Title = "ToDo API",
-                    Description = "A simple example ASP.NET Core Web API"
+                    Description = "A simple example .NET Core Web API"
                 });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
