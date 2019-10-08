@@ -5,6 +5,10 @@ descargar el sdk e instalar
 * dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 3.0.0
 * dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 3.0.0
 * dotnet add package Microsoft.EntityFrameworkCore.Design --version 3.0.0
+* dotnet add package Microsoft.AspNetCore.Cors --version 2.2.0
+
+# cors
+https://dotnetcoretutorials.com/2017/01/03/enabling-cors-asp-net-core/
 
 #  Config
 crear una carpeta Properties

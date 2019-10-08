@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using api.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ using Newtonsoft.Json;
 namespace api.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("AllowOrigin")] 
     [ApiController]
     public class AccountsController : ControllerBase
     {

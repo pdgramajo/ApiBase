@@ -35,6 +35,10 @@ namespace api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(c =>  
+            {  
+                c.AddPolicy("AllowOrigin", options => options.WithOrigins("http://localhost:3000"));  
+            }); 
             services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -106,6 +110,7 @@ namespace api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(options=>options.WithOrigins("http://localhost:3000"));
             app.UseAuthentication();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
