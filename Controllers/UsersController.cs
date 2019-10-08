@@ -75,6 +75,19 @@ namespace api.Controllers
             return Ok(userData);
         }
 
+        [HttpGet("{id}/Roles")]
+        public async Task<ActionResult<IdentityRole>> GetRolesByUser(string id)
+        {
+            var userExist = _userManager.Users.Any(x => x.Id == id);
+            if (!userExist)
+            {
+                return NotFound("El usuario no existe");
+            }
+            var user = await _userManager.FindByIdAsync(id);
+            var x = await _userManager.GetRolesAsync(user);
+            return Ok(x);
+        }
+
         [HttpPost("{id}/Role")]
         public async Task<ActionResult> AddRole(string id, [FromBody] RoleId role)
         {

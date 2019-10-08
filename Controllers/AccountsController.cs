@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace api.Controllers
 {
@@ -89,13 +91,7 @@ namespace api.Controllers
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
             var roles = await _userManager.GetRolesAsync(user);
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.UniqueName, model.Email),
-                new Claim("customInfo","whatever"),
-                new Claim("roles",string.Join(",", roles.ToArray())),
-                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
-            };
+
             var secretKey = _configuration["Super_Secret_Key"]; //esto esta en una variable de ambiente
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
@@ -103,14 +99,20 @@ namespace api.Controllers
 
             var expiration = DateTime.UtcNow.AddHours(8);
 
-            JwtSecurityToken token = new JwtSecurityToken(
-                issuer: "yourdomain.com",
-                audience: "yourdomain.com",
-                claims: claims,
-                expires: expiration,
-                signingCredentials: cred
-                );
+            var header = new JwtHeader(cred);
 
+            var payload = new JwtPayload {
+                {"params", new { }},// this is for future parameters
+                {JwtRegisteredClaimNames.Exp, expiration},
+                {JwtRegisteredClaimNames.Sub,user.Id},
+                {"name",user.Email},
+                {JwtRegisteredClaimNames.Email,user.Email},
+                {"roles", string.Join(",",roles)},
+                {JwtRegisteredClaimNames.Iss, "yourdomain.com"},
+                {JwtRegisteredClaimNames.Aud, "yourdomain.com"}
+            };
+
+            var token = new JwtSecurityToken(header, payload);
             return Ok(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
