@@ -31,14 +31,22 @@ namespace api
         }
 
         public IConfiguration Configuration { get; }
-
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(c =>  
-            {  
-                c.AddPolicy("AllowOrigin", options => options.WithOrigins("http://localhost:3000"));  
-            }); 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins("http://127.0.0.1:5500",
+                                        "http://localhost:3000")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod()
+                                        .AllowCredentials();
+                });
+            });
             services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -105,14 +113,16 @@ namespace api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(options=>options.WithOrigins("http://localhost:3000"));
+          // app.UseCors(options => options.WithOrigins("http://127.0.0.1:5500"));
+          app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
-
+            
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
@@ -125,12 +135,12 @@ namespace api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            // app.UseCors(MyAllowSpecificOrigins);
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers();//.RequireCors("policy-name");
             });
         }
     }

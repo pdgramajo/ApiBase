@@ -7,6 +7,10 @@ descargar el sdk e instalar
 * dotnet add package Microsoft.EntityFrameworkCore.Design --version 3.0.0
 * dotnet add package Microsoft.AspNetCore.Cors --version 2.2.0
 
+# nuget
+
+* para remover un nuget `dotnet remove package Microsoft.Extensions.DependencyInjection`
+
 # cors
 https://dotnetcoretutorials.com/2017/01/03/enabling-cors-asp-net-core/
 

@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 namespace api.Controllers
 {
     [Route("api/[controller]")]
-    [EnableCors("AllowOrigin")] 
+    [EnableCors("AllowOrigin")]
     [ApiController]
     public class AccountsController : ControllerBase
     {
@@ -97,28 +97,42 @@ namespace api.Controllers
             var secretKey = _configuration["Super_Secret_Key"]; //esto esta en una variable de ambiente
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
-            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            // var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var expiration = DateTime.UtcNow.AddHours(8);
+            // var expiration = DateTime.UtcNow.AddHours(8);
 
-            var header = new JwtHeader(cred);
+            // var header = new JwtHeader(cred);
 
-            var payload = new JwtPayload {
-                {"params", new { }},// this is for future parameters
-                {JwtRegisteredClaimNames.Exp, expiration},
-                {JwtRegisteredClaimNames.Sub,user.Id},
-                {"name",user.Email},
-                {JwtRegisteredClaimNames.Email,user.Email},
-                {"roles", string.Join(",",roles)},
-                {JwtRegisteredClaimNames.Iss, "yourdomain.com"},
-                {JwtRegisteredClaimNames.Aud, "yourdomain.com"}
-            };
+            // var payload = new JwtPayload {
+            //     {"params", new { }},// this is for future parameters
+            //     {JwtRegisteredClaimNames.Exp, expiration},
+            //     {JwtRegisteredClaimNames.Sub,user.Id},
+            //     {"name",user.Email},
+            //     {JwtRegisteredClaimNames.Email,user.Email},
+            //     {"roles", string.Join(",",roles)},
+            //     {JwtRegisteredClaimNames.Iss, "yourdomain.com"},
+            //     {JwtRegisteredClaimNames.Aud, "yourdomain.com"}
+            // };
 
-            var token = new JwtSecurityToken(header, payload);
+            // var token = new JwtSecurityToken(header, payload);
+
+            var claims = new List<Claim>
+                        {
+                            new Claim(JwtRegisteredClaimNames.Sub,user.Id),
+                            new Claim(JwtRegisteredClaimNames.Email,user.Email),
+                            new Claim("name",user.Email),
+                            new Claim("roles", string.Join(",",roles)),
+                        };
+
+           
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.Now.AddHours(120);
+            var token = new JwtSecurityToken("yourdomain.com", "yourdomain.com", claims, expires: expires, signingCredentials: creds);
             return Ok(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
-                expiration
+                expires
             });
         }
     }
