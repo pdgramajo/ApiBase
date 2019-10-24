@@ -7,6 +7,15 @@ descargar el sdk e instalar
 * dotnet add package Microsoft.EntityFrameworkCore.Design --version 3.0.0
 * dotnet add package Microsoft.AspNetCore.Cors --version 2.2.0
 
+# Troubleshoot certificate problems
+* This section provides help when the ASP.NET Core HTTPS development certificate has been installed and trusted, but you still have browser warnings that the certificate is not trusted.
+* All platforms - certificate not trusted
+* Run the following commands:
+```
+dotnet dev-certs https --clean
+dotnet dev-certs https --trust
+```
+
 # nuget
 
 * para remover un nuget `dotnet remove package Microsoft.Extensions.DependencyInjection`
