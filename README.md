@@ -30,7 +30,7 @@ deveria de quedar asi:
 Properties/launchSettings.json
 
 copiar en el archivo este contenido reemplazando 
-el valor de Super_Secret_Key 
+el valor de SUPER_SECRET_KEY 
 ```
 {
   "$schema": "http://json.schemastore.org/launchsettings.json",
@@ -49,7 +49,8 @@ el valor de Super_Secret_Key
       "launchUrl": "index.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "Super_Secret_Key": "MY_SUPER_SECRET_KEY"
+        "SUPER_SECRET_KEY": "MY_SUPER_SECRET_KEY",
+        "STRING_CONNECTION":"Server=PABLO-GRAMAJO\\SQLEXPRESSXXXX;Database=TesisBD;Trusted_Connection=True;"
       }
     },
     "api": {
@@ -59,7 +60,8 @@ el valor de Super_Secret_Key
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "Super_Secret_Key": "MY_SUPER_SECRET_KEY"
+        "SUPER_SECRET_KEY": "MY_SUPER_SECRET_KEY",
+        "STRING_CONNECTION":"Server=PABLO-GRAMAJO\\SQLEXPRESSXXXX;Database=TesisBD;Trusted_Connection=True;"
       }
     }
   }

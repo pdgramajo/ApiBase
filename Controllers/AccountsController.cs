@@ -94,7 +94,7 @@ namespace api.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             var roles = await _userManager.GetRolesAsync(user);
 
-            var secretKey = _configuration["Super_Secret_Key"]; //esto esta en una variable de ambiente
+            var secretKey = _configuration["SUPER_SECRET_KEY"]; //esto esta en una variable de ambiente
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
             // var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

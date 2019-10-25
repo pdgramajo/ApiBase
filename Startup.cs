@@ -47,7 +47,7 @@ namespace api
                                         .AllowCredentials();
                 });
             });
-            services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(Configuration["STRING_CONNECTION"]));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                            .AddEntityFrameworkStores<ApplicationDBContext>()
@@ -63,7 +63,7 @@ namespace api
                              ValidateLifetime = true,
                              ValidIssuer = "yourdomain.com",//esto va en un archivo de configuracion
                              ValidAudience = "yourdomain.com",
-                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Super_Secret_Key"])),
+                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SUPER_SECRET_KEY"])),
                              ClockSkew = TimeSpan.Zero
                          });
 
