@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using api.Models;
 
-namespace webapinetcorebase.Controllers
+namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

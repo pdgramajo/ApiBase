@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Http;
 
 namespace api
 {
@@ -119,10 +121,10 @@ namespace api
                 app.UseDeveloperExceptionPage();
             }
 
-          // app.UseCors(options => options.WithOrigins("http://127.0.0.1:5500"));
-          app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            // app.UseCors(options => options.WithOrigins("http://127.0.0.1:5500"));
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
-            
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
@@ -141,6 +143,13 @@ namespace api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();//.RequireCors("policy-name");
+            });
+
+            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+                RequestPath = new PathString("/Resources")
             });
         }
     }
