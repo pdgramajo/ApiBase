@@ -1,3 +1,4 @@
+using Microsoft.VisualBasic.CompilerServices;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,6 +9,7 @@ using api.Models;
 using System.IO;
 using System.Net.Http.Headers;
 using System;
+using api.Helpers;
 
 namespace api.Controllers
 {
@@ -22,23 +24,11 @@ namespace api.Controllers
             try
             {
                 var file = Request.Form.Files[0];
-                var folderName = Path.Combine("Resources", "Files");
+                var folderName = CUtils.GetFolderPathToSave(CUtils.File);
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-                var directoryInfo = new DirectoryInfo(folderName);
-                if (!directoryInfo.Exists)
-                {
-                    directoryInfo.Create();
-                }
                 if (file.Length > 0)
                 {
-                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"').Replace(" ", "_");
-
-                    var fileNameToSave = string.Concat(
-                                 Path.GetFileNameWithoutExtension(fileName),
-                                 DateTime.Now.ToString("yyyyMMddHHmmssfff"),
-                                 Path.GetExtension(fileName)
-                                 );
-
+                    var fileNameToSave = CUtils.GetFileNameFormated(file.FileName);
                     var fullPath = Path.Combine(pathToSave, fileNameToSave);
                     var dbPath = Path.Combine(folderName, fileNameToSave);
 
@@ -46,8 +36,8 @@ namespace api.Controllers
                     {
                         file.CopyTo(stream);
                     }
-
-                    return Ok(new { Path = "/" + dbPath.Replace("\\", "/") });
+                    var baseURL = Request.Scheme + "://" + Request.Host.Value;
+                    return Ok(new { Path = baseURL + "/" + dbPath.Replace("\\", "/") });
                 }
                 else
                 {
