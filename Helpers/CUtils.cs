@@ -44,5 +44,17 @@ namespace api.Helpers
                 );
             return result;
         }
+
+        public static string GetRootFolderToStaticFiles()
+        {
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), @"Resources");
+            var directoryInfo = new DirectoryInfo(folderPath);
+            if (!directoryInfo.Exists)
+            {
+                directoryInfo.Create();
+            }
+            return folderPath;
+        }
+
     }
 }

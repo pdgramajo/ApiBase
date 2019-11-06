@@ -67,9 +67,6 @@ el valor de SUPER_SECRET_KEY
   }
 }
 ```
-# Images
- the folder `Resources` need be created in the root
-
 # Swagger Configuration
 
 ### Get started with Swashbuckle and ASP.NET Core
