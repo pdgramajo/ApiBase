@@ -18,6 +18,12 @@ namespace api.Controllers
     // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class FileController : ControllerBase
     {
+        
+        /// <summary>
+        /// example for description in swagger: Post a file
+        /// </summary>
+        /// <returns> the url for the image </returns>
+        /// POST /api/File
         [HttpPost, DisableRequestSizeLimit]
         public IActionResult Upload()
         {
