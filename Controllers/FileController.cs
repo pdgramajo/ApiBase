@@ -10,26 +10,38 @@ using System.IO;
 using System.Net.Http.Headers;
 using System;
 using api.Helpers;
+using Microsoft.AspNetCore.Http;
+using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Newtonsoft.Json.Converters;
 
 namespace api.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class FileController : ControllerBase
     {
-        
+        // By default, WebApi serializes enum's as integers. This tells it to use strings instead
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum ProductType
+        {
+            rr = 2,
+            aa = 3,
+            bb = 4
+        }
+
         /// <summary>
         /// example for description in swagger: Post a file
         /// </summary>
         /// <returns> the url for the image </returns>
         /// POST /api/File
         [HttpPost, DisableRequestSizeLimit]
-        public IActionResult Upload()
+        public IActionResult Upload(IFormFile file, ProductType TimeBasis)
         {
             try
             {
-                var file = Request.Form.Files[0];
                 var folderName = CUtils.GetFolderPathToSave(CUtils.File);
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 if (file.Length > 0)
@@ -56,5 +68,4 @@ namespace api.Controllers
             }
         }
     }
-
 }

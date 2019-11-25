@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
