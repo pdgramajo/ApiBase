@@ -21,7 +21,16 @@ dotnet dev-certs https --trust
 * para remover un nuget `dotnet remove package Microsoft.Extensions.DependencyInjection`
 
 # cors
-https://dotnetcoretutorials.com/2017/01/03/enabling-cors-asp-net-core/
+```
+Install-Package Microsoft.AspNetCore.Cors
+```
+
+in the startup.cs in the configure method
+
+```
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+```
+
 
 #  Config
 crear una carpeta Properties

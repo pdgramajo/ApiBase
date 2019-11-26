@@ -1,16 +1,11 @@
-using System.Security.Cryptography;
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.IO;
@@ -35,22 +30,9 @@ namespace api
         }
 
         public IConfiguration Configuration { get; }
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy(MyAllowSpecificOrigins,
-                builder =>
-                {
-                    builder.WithOrigins("http://127.0.0.1:5500",
-                                        "http://localhost:3000")
-                                        .AllowAnyHeader()
-                                        .AllowAnyMethod()
-                                        .AllowCredentials();
-                });
-            });
             services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -81,7 +63,6 @@ namespace api
                     Title = "ToDo API",
                     Description = "A simple example .NET Core Web API"
                 });
-                // c.OperationFilter<FileOperationFilter>();
  
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -125,7 +106,6 @@ namespace api
                 app.UseDeveloperExceptionPage();
             }
 
-            // app.UseCors(options => options.WithOrigins("http://127.0.0.1:5500"));
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
 
