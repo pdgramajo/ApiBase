@@ -10,7 +10,7 @@ namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RolesController : ControllerBase
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -38,20 +38,12 @@ namespace api.Controllers
                 return BadRequest("el id no existe");
             }
 
-            var claims = User.Claims.ToList();
-
-            bool isAdmin = claims.Any(x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role" && x.Value.Contains("Admin"));
-            if (isAdmin)
-            {
-
-                return role;
-            }
-
-            return Unauthorized();
+            return role;
         }
 
         // POST: api/Role
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult<IdentityRole>> Post([FromBody] RoleInfo rol)
         {
             var role = new IdentityRole(rol.Name);
@@ -63,12 +55,13 @@ namespace api.Controllers
             }
             else
             {
-                return BadRequest("error al crear el rol: " + result );
+                return BadRequest("error al crear el rol: " + result);
             }
         }
 
         // PUT: api/Role/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult<IdentityRole>> Put(string id, [FromBody] RoleInfo roleInfo)
         {
             if (string.IsNullOrEmpty(roleInfo.Name) || string.IsNullOrEmpty(id))
@@ -98,6 +91,7 @@ namespace api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult<IdentityRole>> Delete(string id)
         {
             var rol = await _roleManager.FindByIdAsync(id);

@@ -9,12 +9,15 @@ using Microsoft.Extensions.Configuration;
 using api.Models;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace api.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UsersController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -90,6 +93,7 @@ namespace api.Controllers
         }
 
         [HttpPost("{id}/Role")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult> AddRole(string id, [FromBody] RoleId role)
         {
             if (ModelState.IsValid)
@@ -122,6 +126,7 @@ namespace api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult> editUser(string id, [FromBody]UserEditData user)
         {
             if (ModelState.IsValid)

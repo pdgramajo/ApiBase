@@ -20,7 +20,7 @@ namespace api.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class FileController : ControllerBase
     {
         // By default, WebApi serializes enum's as integers. This tells it to use strings instead
@@ -38,6 +38,7 @@ namespace api.Controllers
         /// <returns> the url for the image </returns>
         /// POST /api/File
         [HttpPost, DisableRequestSizeLimit]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Upload(IFormFile file, ProductType TimeBasis)
         {
             try

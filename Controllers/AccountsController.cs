@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,6 @@ using Microsoft.IdentityModel.Tokens;
 namespace api.Controllers
 {
     [Route("api/[controller]")]
-    [EnableCors("AllowOrigin")]
     [ApiController]
     public class AccountsController : ControllerBase
     {
@@ -35,6 +35,7 @@ namespace api.Controllers
         // POST: api/Account
         [Route("Create")]
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> CreateUser([FromBody] UserInfoCreate model)
         {
             if (ModelState.IsValid)
