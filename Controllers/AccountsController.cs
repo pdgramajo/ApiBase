@@ -44,7 +44,7 @@ namespace api.Controllers
             if (ModelState.IsValid)
             {
 
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, PhoneNumber = model.PhoneNumber, AvatarUrl = model.AvatarUrl };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (!string.IsNullOrEmpty(model.RoleId))
                 {
@@ -126,6 +126,7 @@ namespace api.Controllers
                             new Claim(JwtRegisteredClaimNames.Sub,user.Id),
                             new Claim(JwtRegisteredClaimNames.Email,user.Email),
                             new Claim("name",user.Email),
+                            new Claim("avatar",user.AvatarUrl),
                             new Claim("roles", string.Join(",",roles)),
                         };
 
@@ -133,7 +134,7 @@ namespace api.Controllers
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddHours(120);
-            var token = new JwtSecurityToken("yourdomain.com", "yourdomain.com", claims, expires: expires, signingCredentials: creds);
+            var token = new JwtSecurityToken(_configuration["Issuer"], _configuration["Audience"], claims, expires: expires, signingCredentials: creds);
             return Ok(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),

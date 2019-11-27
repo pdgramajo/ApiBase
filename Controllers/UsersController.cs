@@ -43,6 +43,7 @@ namespace api.Controllers
                 UserName = user.UserName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
+                AvatarUrl = user.AvatarUrl,
                 Roles = string.Join(",", user.Roles.Join(_roleManager.Roles,
                                             userRole => userRole.RoleId,
                                             role => role.Id,
@@ -69,6 +70,7 @@ namespace api.Controllers
                 UserName = user.UserName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
+                AvatarUrl = user.AvatarUrl,
                 Roles = string.Join(',', user.Roles.Join(_roleManager.Roles,
                                             userRole => userRole.RoleId,
                                             role => role.Id,
@@ -149,6 +151,7 @@ namespace api.Controllers
                 }
 
                 userToEdit.PhoneNumber = user.PhoneNumber;
+                userToEdit.AvatarUrl = user.AvatarUrl;
 
                 var result = await _userManager.UpdateAsync(userToEdit);
 

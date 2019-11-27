@@ -47,8 +47,8 @@ namespace api
                              ValidateIssuer = true,
                              ValidateAudience = true,
                              ValidateLifetime = true,
-                             ValidIssuer = "yourdomain.com",//esto va en un archivo de configuracion
-                             ValidAudience = "yourdomain.com",
+                             ValidIssuer = Configuration["Issuer"],//esto va en un archivo de configuracion
+                             ValidAudience = Configuration["Audience"],
                              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SUPER_SECRET_KEY"])),
                              ClockSkew = TimeSpan.Zero
                          });

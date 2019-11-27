@@ -14,11 +14,13 @@ namespace api.Models
     {
         public string Id { get; set; }
         public string Roles { get; set; }
+        public string AvatarUrl { get; set; }
     }
 
     public class UserEditData
     {
         public string PhoneNumber { get; set; }
+        public string AvatarUrl { get; set; }
         [Required]
         public string[] roles { get; set; }
     }

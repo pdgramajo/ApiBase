@@ -54,7 +54,10 @@ namespace api.Controllers
                         file.CopyTo(stream);
                     }
                     var baseURL = Request.Scheme + "://" + Request.Host.Value;
-                    return Ok(new { Path = baseURL + "/" + dbPath.Replace("\\", "/") });
+                    return Ok(new {
+                         absolutPath = baseURL + "/" + dbPath.Replace("\\", "/"),
+                         relativePath = dbPath.Replace("\\", "/")
+                         });
                 }
                 else
                 {

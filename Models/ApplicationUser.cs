@@ -8,8 +8,10 @@ namespace api.Models
  // solo debe heredar de la tabla que corresponda
     public class ApplicationUser : IdentityUser
     {
+        public string AvatarUrl { get; set; }
         public virtual ICollection<IdentityUserRole<string>> Roles { get; set; }
 
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
+
     }
 }
