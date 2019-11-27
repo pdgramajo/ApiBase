@@ -33,7 +33,8 @@ namespace api.Controllers
             _configuration = configuration;
         }
 
-        // POST: api/Account
+        /// <summary>To add a user the user logged need be Admin or Manager</summary>
+        /// POST api/Accounts/Create
         [Route("Create")]
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -67,6 +68,8 @@ namespace api.Controllers
             }
         }
 
+        /// <summary>Get the token to login in the API</summary>
+        /// POST api/Accounts/Login
         [Route("Login")]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] UserInfo model)
@@ -126,7 +129,7 @@ namespace api.Controllers
                             new Claim("roles", string.Join(",",roles)),
                         };
 
-           
+
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddHours(120);

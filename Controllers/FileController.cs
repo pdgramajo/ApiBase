@@ -32,10 +32,8 @@ namespace api.Controllers
             bb = 4
         }
 
-        /// <summary>
-        /// example for description in swagger: Post a file
-        /// </summary>
-        /// <returns> the url for the image </returns>
+        /// <summary>Upload an avatar</summary>
+        /// <remarks> we are testing this</remarks>
         /// POST /api/File
         [HttpPost, DisableRequestSizeLimit]
         [Authorize(Roles = "Admin,Manager")]

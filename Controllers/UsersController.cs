@@ -79,6 +79,8 @@ namespace api.Controllers
             return Ok(userData);
         }
 
+        /// <summary>Get all roles for a particular user</summary>
+        // /// <param name="id">this is a UserId</param>
         [HttpGet("{id}/Roles")]
         public async Task<ActionResult<IdentityRole>> GetRolesByUser(string id)
         {
