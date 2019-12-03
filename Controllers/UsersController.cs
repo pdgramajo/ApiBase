@@ -1,3 +1,5 @@
+using System;
+using System.Net;
 using Microsoft.Win32.SafeHandles;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -84,16 +86,22 @@ namespace api.Controllers
         /// <summary>Get all roles for a particular user</summary>
         // /// <param name="id">this is a UserId</param>
         [HttpGet("{id}/Roles")]
-        public async Task<ActionResult<IdentityRole>> GetRolesByUser(string id)
+        [ProducesResponseType(typeof(List<string>),(int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string),(int) HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string),(int) HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(string),(int) HttpStatusCode.Forbidden)]
+        [ProducesResponseType(typeof(string),(int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string),(int) HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<List<string>>> GetRolesByUser(string id)
         {
             var userExist = _userManager.Users.Any(x => x.Id == id);
             if (!userExist)
             {
-                return NotFound("El usuario no existe");
+                return NotFound();
             }
             var user = await _userManager.FindByIdAsync(id);
-            var x = await _userManager.GetRolesAsync(user);
-            return Ok(x);
+            var roles = await _userManager.GetRolesAsync(user);
+            return Ok(roles);
         }
 
         [HttpPost("{id}/Role")]
