@@ -43,14 +43,14 @@ namespace api.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, PhoneNumber = model.PhoneNumber, AvatarUrl = model.AvatarUrl };
                 var result = await _userManager.CreateAsync(user, model.Password);
-                if (!string.IsNullOrEmpty(model.RoleId))
-                {
-                    var role = await _roleManager.FindByIdAsync(model.RoleId);
 
-                    await _userManager.AddToRoleAsync(user, role.Name);
+                if (!string.IsNullOrEmpty(model.RoleName))
+                {
+                    // var role = await _roleManager.FindByIdAsync(model.RoleId);
+
+                    await _userManager.AddToRoleAsync(user, model.RoleName);
                 }
 
                 if (result.Succeeded)

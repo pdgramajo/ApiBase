@@ -8,7 +8,7 @@ namespace api.Models
 {
      public class UserInfoCreate : UserInfo
     {
-        public string RoleId { get; set; }
+        public string RoleName { get; set; }
         public string AvatarUrl { get; set; }
         public string PhoneNumber { get; set; }
     }
