@@ -86,12 +86,12 @@ namespace api.Controllers
         /// <summary>Get all roles for a particular user</summary>
         // /// <param name="id">this is a UserId</param>
         [HttpGet("{id}/Roles")]
-        [ProducesResponseType(typeof(List<string>),(int) HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(string),(int) HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(string),(int) HttpStatusCode.Unauthorized)]
-        [ProducesResponseType(typeof(string),(int) HttpStatusCode.Forbidden)]
-        [ProducesResponseType(typeof(string),(int) HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(string),(int) HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(List<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<List<string>>> GetRolesByUser(string id)
         {
             var userExist = _userManager.Users.Any(x => x.Id == id);
@@ -153,10 +153,8 @@ namespace api.Controllers
 
                 var roles = await _userManager.GetRolesAsync(userToEdit);
                 await _userManager.RemoveFromRolesAsync(userToEdit, roles.ToArray());
-                foreach (string rol in user.roles)
-                {
-                    await _userManager.AddToRoleAsync(userToEdit, rol);
-                }
+
+                await _userManager.AddToRoleAsync(userToEdit, user.rolName);
 
                 userToEdit.PhoneNumber = user.PhoneNumber;
                 userToEdit.AvatarUrl = user.AvatarUrl;

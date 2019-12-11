@@ -22,6 +22,6 @@ namespace api.Models
         public string PhoneNumber { get; set; }
         public string AvatarUrl { get; set; }
         [Required]
-        public string[] roles { get; set; }
+        public string rolName { get; set; }
     }
 }
