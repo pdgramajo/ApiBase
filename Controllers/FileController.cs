@@ -54,10 +54,11 @@ namespace api.Controllers
                         file.CopyTo(stream);
                     }
                     var baseURL = Request.Scheme + "://" + Request.Host.Value;
-                    return Ok(new {
-                         absolutPath = baseURL + "/" + dbPath.Replace("\\", "/"),
-                         relativePath = dbPath.Replace("\\", "/")
-                         });
+                    return Ok(new
+                    {
+                        absolutPath = baseURL + "/" + dbPath.Replace("\\", "/"),
+                        relativePath = dbPath.Replace("\\", "/")
+                    });
                 }
                 else
                 {
@@ -68,6 +69,35 @@ namespace api.Controllers
             {
                 return StatusCode(500, "Internal server error " + ex.Message);
             }
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
+        public IActionResult Delete(string id)
+        {
+            try
+            {
+                var folderName = CUtils.GetFolderPathToSave(CUtils.File);
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+                var fullPath = Path.Combine(pathToSave, id);
+
+                if (System.IO.File.Exists(fullPath))
+                {
+                    System.IO.File.Delete(fullPath);
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error " + ex.Message);
+            }
+
         }
     }
 }
