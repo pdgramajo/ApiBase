@@ -39,7 +39,9 @@ namespace api.Controllers
         [HttpGet]
         public async Task<ActionResult<IQueryable<ApplicationUserBasicData>>> Get()
         {
-            var users = await _userManager.Users.Select(user => new ApplicationUserBasicData
+            var users = await _userManager.Users
+            .Where(s => s.Enabled == true)
+            .Select(user => new ApplicationUserBasicData
             {
                 Id = user.Id,
                 UserName = user.UserName,
@@ -183,6 +185,36 @@ namespace api.Controllers
                 return BadRequest(ModelState);
             }
 
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
+        public async Task<ActionResult> Delete(string id)
+        {
+            var userExist = await _userManager.Users.AnyAsync(x => x.Id == id);
+            if (!userExist)
+            {
+                return NotFound();
+            }
+            var userToEdit = await _userManager.FindByIdAsync(id);
+            userToEdit.Enabled = false;
+
+            var result = await _userManager.UpdateAsync(userToEdit);
+
+            if (result.Succeeded)
+            {
+                return Ok(new
+                {
+                    result = result
+                });
+            }
+            else
+            {
+                return BadRequest(new
+                {
+                    result = result
+                });
+            }
         }
     }
 }

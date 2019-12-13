@@ -1,3 +1,8 @@
+# EF core important command
+* https://www.entityframeworktutorial.net/efcore/cli-commands-for-ef-core-migration.aspx
+* dotnet ef migrations add xxx
+* dotnet ef database update
+
 # WebApi .NetCore 3.0
 descargar el sdk e instalar
 * https://dotnet.microsoft.com/download/dotnet-core/3.0

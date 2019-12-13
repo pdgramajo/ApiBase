@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 namespace api.Models
@@ -9,9 +10,15 @@ namespace api.Models
     public class ApplicationUser : IdentityUser
     {
         public string AvatarUrl { get; set; }
+        public bool Enabled { get; set; }
         public virtual ICollection<IdentityUserRole<string>> Roles { get; set; }
 
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
+
+        public ApplicationUser()
+        {
+            Enabled = true;
+        }
 
     }
 }
