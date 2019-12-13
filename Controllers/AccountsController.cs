@@ -77,6 +77,11 @@ namespace api.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user.Enabled == false)
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid Login attempt.");
+                    return BadRequest(ModelState);
+                }
                 var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, true, false);
                 if (result.Succeeded)
                 {
