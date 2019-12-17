@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -14,10 +15,12 @@ namespace api.Controllers
     public class RolesController : ControllerBase
     {
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public RolesController(RoleManager<IdentityRole> roleMgr)
+        public RolesController(RoleManager<IdentityRole> roleMgr, UserManager<ApplicationUser> userManager)
         {
             _roleManager = roleMgr;
+            _userManager = userManager;
         }
 
         // GET: api/Role
@@ -39,6 +42,36 @@ namespace api.Controllers
             }
 
             return role;
+        }
+        // GET: api/Role/5
+        [HttpGet("{id}/Users")]
+        public async Task<ActionResult<IQueryable<ApplicationUserBasicData>>> GetUsersByRoleId(string id)
+        {
+            var role = await _roleManager.FindByIdAsync(id);
+
+            if (string.IsNullOrEmpty(role.Id))
+            {
+                return BadRequest("el id no existe");
+            }
+
+            var users = await _userManager.Users
+                        .Select(user => new ApplicationUserBasicData
+                        {
+                            Id = user.Id,
+                            UserName = user.UserName,
+                            Email = user.Email,
+                            PhoneNumber = user.PhoneNumber,
+                            AvatarUrl = user.AvatarUrl,
+                            Roles = string.Join(",", user.Roles.Join(_roleManager.Roles,
+                                                        userRole => userRole.RoleId,
+                                                        role => role.Id,
+                                                        (userRole, role) => role.Name
+                                                        ).ToList())
+                        }).ToListAsync();
+
+            var usersFiltered = users.Where(user => user.Roles == role.Name);
+
+            return Ok(usersFiltered);
         }
 
         // POST: api/Role
