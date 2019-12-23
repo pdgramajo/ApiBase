@@ -49,7 +49,7 @@ namespace api
                              ValidateLifetime = true,
                              ValidIssuer = Configuration["Issuer"],//esto va en un archivo de configuracion
                              ValidAudience = Configuration["Audience"],
-                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SUPER_SECRET_KEY"])),
+                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SuperSecretKey"])),
                              ClockSkew = TimeSpan.Zero
                          });
 
@@ -118,7 +118,7 @@ namespace api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.RoutePrefix = string.Empty;
             });
-            app.UseHttpsRedirection();
+           // app.UseHttpsRedirection();
 
             app.UseRouting();
             // app.UseCors(MyAllowSpecificOrigins);
