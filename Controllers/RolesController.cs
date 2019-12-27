@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
+using ApiBase.Models;
+using ApiBase.Helpers;
+using Newtonsoft.Json;
 
 namespace api.Controllers
 {
@@ -25,9 +28,25 @@ namespace api.Controllers
 
         // GET: api/Role
         [HttpGet]
-        public ActionResult<IQueryable<IdentityRole>> Get()
+        public ActionResult<IQueryable<IdentityRole>> Get([FromQuery] RoleParameters roleParameters)
         {
-            return Ok(_roleManager.Roles);
+
+            var roles = _roleManager.Roles;
+            
+            var result = PagedList<IdentityRole>.ToPagedList(roles, roleParameters.PageNumber, roleParameters.PageSize);
+
+            var metadata = new
+            {
+                result.TotalCount,
+                result.PageSize,
+                result.CurrentPage,
+                result.TotalPages,
+                result.HasNext,
+                result.HasPrevious
+            };
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            return Ok(result);
         }
 
         // GET: api/Role/5

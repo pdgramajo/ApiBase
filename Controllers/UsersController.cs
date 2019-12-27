@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ApiBase.Helpers;
+using Newtonsoft.Json;
 
 namespace api.Controllers
 {
@@ -37,7 +39,7 @@ namespace api.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IQueryable<ApplicationUserBasicData>>> Get()
+        public async Task<ActionResult<IQueryable<ApplicationUserBasicData>>> Get([FromQuery] UserParameters userParameters)
         {
             var users = await _userManager.Users
             .Where(s => s.Enabled == true)
@@ -53,9 +55,23 @@ namespace api.Controllers
                                             role => role.Id,
                                             (userRole, role) => role.Name
                                             ).ToList())
-            }).ToListAsync();
+            })
+            .ToListAsync();
+            var result = PagedList<ApplicationUserBasicData>.ToPagedList(users, userParameters.PageNumber, userParameters.PageSize);
 
-            return Ok(users);
+            var metadata = new
+            {
+                result.TotalCount,
+                result.PageSize,
+                result.CurrentPage,
+                result.TotalPages,
+                result.HasNext,
+                result.HasPrevious
+            };
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+            return Ok(result);
         }
 
         // GET: api/Users/5
