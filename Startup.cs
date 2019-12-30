@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http;
 using api.Helpers;
+using Microsoft.Net.Http.Headers;
 
 namespace api
 {
@@ -29,10 +30,23 @@ namespace api
             Configuration = configuration;
         }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public IConfiguration Configuration { get; }
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .WithExposedHeaders("x-pagination");
+                });
+            });
+            
             services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -63,7 +77,7 @@ namespace api
                     Title = "ToDo API",
                     Description = "A simple example .NET Core Web API"
                 });
- 
+
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
@@ -95,6 +109,9 @@ namespace api
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,7 +123,6 @@ namespace api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -118,10 +134,13 @@ namespace api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.RoutePrefix = string.Empty;
             });
-           // app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
-            // app.UseCors(MyAllowSpecificOrigins);
+
+            // el cors siempre debe ir entre el useRouting y el user endpoint
+            app.UseCors(MyAllowSpecificOrigins);
+            //  app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
